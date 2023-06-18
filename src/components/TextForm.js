@@ -22,14 +22,18 @@ export default function (props) {
         // console.log("changed");
         const word = event.target.value;
         setText(word);
-        setWordCount(countWord(word));
+        props.showAlert("Converted to UpperCase", "Success")
     };
-    const countWord=(string)=>{
-      const text =string.trim().split(" ").length;
-      return text;
+    const handleCopy=()=>{
+      navigator.clipboard.writeText(text);
+      props.showAlert("Copied to Clipboard!" , "success")
+    }
+    const handleSpace=()=>{
+      let newText =text.split(/[ ]+/);
+      setText(newText.join(" "));
+      props.showAlert("Extra Space Removed", "Success");
     }
     const [text, setText] = useState('');
-    const [wordCount, setWordCount] = useState(0);
     // setText("new Text");
   return (
     <>
@@ -40,11 +44,13 @@ export default function (props) {
 </div>
 <button disabled ={text.length ===0} className="btn btn-primary mx-1 my-1" onClick={handleUpClick}>Convert to  uppercase</button>
 <button disabled ={text.length ===0} className="btn btn-primary mx-1 my-1" onClick={handleLowClick}>Convert to  lowercase</button>
+<button disabled ={text.length ===0} className="btn btn-primary mx-1 my-1" onClick={handleCopy}>Copy to clipboard</button>
+<button disabled ={text.length ===0} className="btn btn-primary mx-1 my-1" onClick={handleSpace}>Remove Extra spaces</button>
 <button disabled ={text.length ===0} className="btn btn-primary mx-1 my-1" onClick={handleClick}>Reverse</button>
     </div>
 <div className="container my-3" style ={{color:props.mode ==='light'? 'black':'white'}}>
   <h2 >Your text summary</h2>
-  <p>{text.split(" ").filter((element)=>{return element.length!==0}).length} words , {text.length} characters</p>
+  <p>{text.split(/\s+/).filter((element)=>{return element.length!==0}).length} words , {text.length} characters</p>
   <p>{0.008* text.split(" ").filter((element)=>{return element.length!==0}).length} Minute read</p>
   <h2>Preview</h2>
   <p>{text.length>0?text:"Nothing to preview here"}</p>
